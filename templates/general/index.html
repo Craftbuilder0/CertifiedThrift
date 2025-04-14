@@ -162,13 +162,14 @@
 <section>
   <h2>Featured Products</h2>
   <div class="product-grid">
-    {% for product in products %}
-    <div class="product-card">
-      <img src="{{ product.image.url }}" alt="Product 1" />
-      <h4>{{ product.name }}</h4>
-      <p>${{ product.price }}</p>
-    </div>
-    {% endfor %}
+      {% for product in products %}
+      <div class="product-card">
+        <img src="{{ product.image.url }}" alt="Product 1" />
+        <h4>{{ product.name }}</h4>
+        <p>${{ product.price }}</p>
+        <a href="store/product-page-{{product.slug}}"><button style="margin: 20px 0 ; padding: 10px 20px; background-color: #333; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s;">View Product</button></a>
+      </div>
+      {% endfor %}
   </div>
 </section>
 
@@ -183,6 +184,7 @@
       />
       <h4>{{ product.name }}</h4>
       <p>${{ product.price }}</p>
+      <a href="store/product-page-{{product.slug}}"><button style="margin: 20px 0 ; padding: 10px 20px; background-color: #333; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s;">View Product</button></a>
     </div>
     {% endfor %}
   </div>
