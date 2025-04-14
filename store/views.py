@@ -117,8 +117,7 @@ def remove_from_cart(request, slug):
     if request.method == "POST":
         # Get the first matching OrderItem for this user and product
         order_item = OrderItem.objects.filter(
-            product__slug=slug,
-            user=request.user
+            product__slug=slug
         ).first()
 
         if order_item:
