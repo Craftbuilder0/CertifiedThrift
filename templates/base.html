@@ -53,18 +53,178 @@
         align-items: center;
       }
     </style>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+      body {
+        font-family: "Montserrat", sans-serif;
+        background-color: black;
+        color: white;
+      }
+      /* Menu toggle button (hamburger) */
+      .menu-toggle {
+        cursor: pointer;
+        display: none;
+        margin-right: 20px;
+      }
+
+      .hamburger-icon {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 25px;
+      }
+
+      .hamburger-icon .bar {
+        height: 4px;
+        background-color: white;
+        border-radius: 5px;
+        transition: all 0.3s ease; /* Smooth transition */
+      }
+
+      /* Active state styles (transform into X) */
+      .menu-toggle.active .bar:nth-child(1) {
+        transform: rotate(45deg) translateX(50%);
+        top: 0;
+        left: 0;
+      }
+
+      .menu-toggle.active .bar:nth-child(2) {
+        opacity: 0; /* Middle bar disappears */
+      }
+
+      .menu-toggle.active .bar:nth-child(3) {
+        transform: rotate(-45deg) translateX(50%);
+        top: 0;
+        left: 0;
+      }
+
+      nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0px;
+        position: relative;
+        background-color: #1f1f1f;
+        padding: 40px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      nav .logo {
+        display: flex;
+        align-items: center;
+        margin-left: 24px;
+      }
+      nav .logo img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+      }
+      nav .logo h1 {
+        margin-left: 10%;
+      }
+      nav .nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        list-style: none;
+        margin-right: 10px;
+      }
+      nav .nav ul li a {
+        text-decoration: none;
+        color: white;
+        position: relative;
+        padding-bottom: 8px;
+      }
+      nav .nav ul li a::before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        margin: 5px 0;
+        transition: all 0.5s;
+      }
+      nav .nav ul li a:hover::before {
+        width: 100%;
+      }
+      @media (max-width: 768px) {
+        .menu-toggle {
+          display: block;
+        }
+        .nav {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background-color: black;
+          padding: 10px 0;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          gap: 25px;
+          overflow: hidden;
+          max-height: 0;
+          transition: max-height 0.4s ease-in-out;
+          flex-direction: column;
+        }
+        nav .nav ul{
+           gap: 40px;
+        }
+        .nav.active {
+          max-height: 500px; /* Adjust based on your content height */
+          background: #393939;
+        }
+        nav .logo {
+          margin-left: 10px;
+        }
+        nav .logo img {
+          width: 60px;
+          height: 60px;
+        }
+        nav .logo h1 {
+          font-size: 1.2rem;
+        }
+        nav .nav ul {
+          flex-direction: column;
+          margin: 10px 0;
+        }
+        .nav.active ul li {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
   </head>
   <body>
-    <header>
-      <h1>CertifiedThrift</h1>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/store">Shop</a>
-        <a href="/about">About</a>
-        <a href="/store/cart">Cart</a>
-        <a href="/account">Account</a>
-      </nav>
-    </header>
+
+    <nav>
+      <div class="logo">
+        <h1>CertifiedThrift</h1>
+      </div>
+      <div class="menu-toggle" id="menu-toggle">
+        <div class="hamburger-icon">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+      <div class="nav" id="nav-menu">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/store">Shop</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/store/cart">Cart</a></li>
+          <li><a href="/account">Account</a></li>
+        </ul>
+      </div>
+    </nav>
     {% if messages %} {% for message in messages %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
       <strong>{{ message.tags }}!</strong> {{ message }}
@@ -80,5 +240,17 @@
     <footer>
       <p>© 2025 CertifiedThrift. All rights reserved.</p>
     </footer>
+    <script>
+      const menu_toggle = document.getElementById("menu-toggle");
+      const nav = document.getElementById("nav-menu");
+      const icon = menu_toggle.querySelector(".hamburger-icon");
+
+      menu_toggle.addEventListener("click", () => {
+        nav.classList.toggle("active"); // Toggle between active and inactive classes
+
+        // Toggle the hamburger icon between active and inactive
+        menu_toggle.classList.toggle("active");
+      });
+    </script>
   </body>
 </html>
