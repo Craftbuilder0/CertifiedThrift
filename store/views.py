@@ -3,9 +3,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from store.models import products, category
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
 from store.models import *
 from django.http import HttpResponse
+from django.db.models.functions import TruncDay
+from django.db.models import Sum
+import json
+from datetime import timedelta
+from django.utils import timezone
 
 # Create your views here.
 
@@ -124,3 +130,43 @@ def remove_from_cart(request, slug):
             order_item.delete()
 
     return redirect('cart')
+
+
+@staff_member_required
+def admin_dashboard(request):
+    # Time range for chart (last 7 days)
+    today = timezone.now()
+    week_ago = today - timedelta(days=6)
+
+    orders = Order.objects.filter(date_ordered__date__gte=week_ago.date(), complete=True)
+
+    # Group sales by day
+    sales_data = {}
+    for i in range(7):
+        day = (week_ago + timedelta(days=i)).date()
+        sales_data[str(day)] = 0
+
+    for order in orders:
+        day = order.date_ordered.date()
+        sales_data[str(day)] += order.get_cart_total
+
+    labels = list(sales_data.keys())
+    values = list(sales_data.values())
+
+    # Stats
+    total_sales = sum(order.get_cart_total for order in Order.objects.filter(complete=True))
+    total_orders = Order.objects.filter(complete=True).count()
+    total_users = Customer.objects.count()
+
+    # Recent orders (simulate notifications)
+    recent_orders = Order.objects.filter(complete=False).order_by('-date_ordered')[:5]
+
+    context = {
+        'labels': json.dumps(labels),
+        'values': json.dumps(values),
+        'total_sales': total_sales,
+        'total_orders': total_orders,
+        'total_users': total_users,
+        'recent_orders': recent_orders,
+    }
+    return render(request, 'store/admin_dashboard.html', context) 

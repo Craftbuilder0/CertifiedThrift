@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+        body {
+            font-family: "Montserrat", sans-serif;
+            background-color: #0f0f0f;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            padding: 1.5rem 2rem;
+            background-color: #1c1c1c;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.1);
+            flex: 1;
+            min-width: 220px;
+            text-align: center;
+        }
+        .stat-card strong {
+            display: block;
+            font-size: 1.2rem;
+            color: #0ff;
+            margin-bottom: 0.5rem;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 4rem auto;
+            background-color: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.1);
+        }
+        .notifications {
+            background-color: #1e1e1e;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.05);
+        }
+        .notifications h2 {
+            margin-bottom: 1.5rem;
+            color: #0ff;
+            font-size: 1.5rem;
+        }
+        .notifications ul {
+            list-style: none;
+            padding: 0;
+        }
+        .notifications li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #333;
+            color: #ccc;
+        }
+        .notifications li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Business Insights</h1>
+
+    <!-- Stats Overview -->
+    <div class="stats">
+        <div class="stat-card"><strong>Total Sales</strong> ${{ total_sales }}</div>
+        <div class="stat-card"><strong>Total Orders</strong> {{ total_orders }}</div>
+        <div class="stat-card"><strong>Total Users</strong> {{ total_users }}</div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="chart-container">
+        <canvas id="salesChart"></canvas>
+    </div>
+
+    <!-- Notifications -->
+    <div class="notifications">
+        <h2>New Order Notifications</h2>
+        <ul>
+            {% for order in recent_orders %}
+                <li>Order #{{ order.id }} by {{ order.customer.name }} — {{ order.date_ordered|date:"d M Y H:i" }}</li>
+            {% empty %}
+                <li>No new orders</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+                    label: 'Sales (Last 7 days)',
+                    data: {{ values|safe }},
+                    borderColor: '#0ff',
+                    backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#09f',
+                    pointRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e0e0e0'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#ccc'
+                        },
+                        grid: {
+                            color: '#222'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#ccc'
+                        },
+                        grid: {
+                            color: '#222'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
