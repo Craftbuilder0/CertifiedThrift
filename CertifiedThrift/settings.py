@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "main",
     'store',
     "checkout",
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -139,6 +141,21 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'foroption1@gmail.com'  # your Gmail address
 EMAIL_HOST_PASSWORD = 'nepemnixiherijpy'  # generated App Password
+
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dkvre1r5l',
+    'API_KEY': '653722963449271',
+    'API_SECRET': 'wa5IKKxkPoFbPpVTnPWOj547V88',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
