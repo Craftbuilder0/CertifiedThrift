@@ -157,6 +157,7 @@
   </div>
   <div class="product-details">
     <h2>{{ product.name }}</h2>
+    <p>{{ product.image.url }}</p>
     <div class="price">${{ product.price }}</div>
     <p>{{ product.description }}</p>
     <form method="POST" action="{% url 'add_to_cart' product.slug %}">
