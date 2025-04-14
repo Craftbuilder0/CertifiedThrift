@@ -134,6 +134,7 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+print("📦 Using storage:", DEFAULT_FILE_STORAGE)
 
 STATIC_URL = "static/"
 
