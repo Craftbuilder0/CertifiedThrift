@@ -1,0 +1,235 @@
+{% extends "base.html" %} {% block title %}Checkout{% endblock title %} {% block content %}
+<style>
+  .checkout-container {
+    max-width: 1100px;
+    margin: 50px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 0 20px;
+    animation: fadeInUp 0.8s ease;
+  }
+
+  .form-section,
+  .summary-section {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 30px;
+  }
+
+  .form-section h2,
+  .summary-section h2 {
+    margin-bottom: 20px;
+  }
+
+  form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  form input,
+  form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #2a2a2a;
+    border: none;
+    color: #eee;
+  }
+
+  .btn {
+    background-color: #333;
+    color: #fff;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+  }
+
+  .summary-section .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #2e2e2e;
+  }
+
+  .summary-section .total {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  footer {
+    background-color: #1a1a1a;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+    margin-top: 60px;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .checkout-container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+<div class="checkout-container">
+  <!-- Shipping Info -->
+  <div class="form-section">
+    <h2>Shipping Details</h2>
+    <form method="POST" action="">
+      {% csrf_token %}
+      <label>Full Name</label>
+      <input type="text" name="full_name" required />
+
+      <label>Email Address</label>
+      <input type="email" name="email" required />
+
+      <label>Address</label>
+      <input type="text" name="address" required />
+
+      <label>City</label>
+      <input type="text" name="city" required />
+
+      <label>Postal Code</label>
+      <input type="text" name="postal_code" required />
+
+      <label>Country</label>
+      <select name="state" required>
+        <option value="">Select Country</option>
+        <option value="Bangladesh">Bangladesh</option>
+        <option value="India">India</option>
+        <option value="USA">USA</option>
+      </select>
+
+      <button type="submit" class="btn">Place Order</button>
+    </form>
+    <!-- Payment Buttons - Initially Hidden -->
+    <div id="payment-buttons" style="display: none; margin-top: 20px">
+      <button id="razorpay-button" class="btn">Pay with Razorpay</button>
+      <button id="stripe-button" class="btn">Pay with Stripe</button>
+    </div>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="summary-section">
+    <h2>Order Summary</h2>
+    {% for item in items %}
+    <div class="item">
+      <span>{{ item.product.name }} x{{ item.quantity }}</span>
+      <span>${{ item.get_total }}</span>
+    </div>
+    {% endfor %}
+
+    <div class="total">
+      <span>Total:</span>
+      <span>${{ order.get_cart_total }}</span>
+    </div>
+  </div>
+</div>
+<!-- Razorpay & Stripe JS -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+  const form = document.querySelector('form');
+  const paymentButtons = document.getElementById('payment-buttons');
+
+  const razorpayBtn = document.getElementById('razorpay-button');
+  const stripeBtn = document.getElementById('stripe-button');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    // Disable form after submit
+    [...form.elements].forEach(el => el.disabled = true);
+
+    // Send shipping details to server
+    fetch('/checkout/save-shipping-details/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => {
+          console.error("Server error:", text);
+          throw new Error("Failed to save shipping details");
+        });
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Shipping details saved:", data);
+
+      // Optionally store some flag or ID for payment session use
+      // Example: localStorage.setItem('shippingId', data.shipping_id);
+
+      // Show payment buttons
+      paymentButtons.style.display = 'block';
+    })
+    .catch(error => {
+      console.error("Submission error:", error);
+    });
+  });
+
+  // Razorpay Integration
+  razorpayBtn.onclick = function (e) {
+    e.preventDefault();
+
+    const amount = {{ order.get_cart_total|floatformat:2 }} * 100; // convert dollars to paise
+
+    const options = {
+      "key": "YOUR_RAZORPAY_KEY",  // replace this
+      "amount": amount,
+      "currency": "INR",
+      "name": "My Store",
+      "description": "Order Payment",
+      "handler": function (response) {
+        alert("Payment successful! Razorpay ID: " + response.razorpay_payment_id);
+        // TODO: Send response.razorpay_payment_id to your backend to verify
+      },
+      "prefill": {
+        "name": form.full_name.value,
+        "email": form.email.value
+      },
+      "theme": {
+        "color": "#3399cc"
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  };
+
+
+</script>
+
+{% endblock content %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %} 
+{% block title %}Store{% endblock title %}
+{% block content %}
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #121212;
+    color: #eee;
+  }
+
+  header {
+    background-color: #1f1f1f;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header h1 {
+    color: #fff;
+  }
+
+  nav a {
+    color: #aaa;
+    margin-left: 20px;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  nav a:hover {
+    color: #fff;
+  }
+
+  .store-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1e1e1e;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+  }
+
+  .filter-bar select {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #2a2a2a;
+    color: #eee;
+    border: none;
+    font-size: 14px;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+  }
+
+  .product-card {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .product-card img {
+    max-width: 80%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .product-card h4 {
+    margin: 10px 0 5px;
+    font-size: 16px;
+  }
+
+  .product-card p {
+    color: #bbb;
+    font-size: 14px;
+  }
+
+  footer {
+    background-color: #1a1a1a;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+    margin-top: 60px;
+  }
+</style>
+<div class="store-container">
+
+  <form method="GET" action="" class="filter-form" style="background:#1e1e1e; padding: 20px; border-radius: 10px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+    <input type="text" name="search" placeholder="Search by name" value="{{ request.GET.search }}" class="form-input" style="flex:1; min-width: 160px; padding: 10px; border-radius: 8px; background-color: #2a2a2a; color: #eee; border: none;">
+    
+    <select name="category" class="form-input" style="flex:1; min-width: 160px; padding: 10px; border-radius: 8px; background-color: #2a2a2a; color: #eee; border: none;">
+      <option value="">Select Category</option>
+      {% for section in category %}
+      <option value="{{section.name}}" {% if request.GET.category == section.name %}selected{% endif %}>{{section.name}}</option>
+      {% endfor %}
+    </select>
+  
+    <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}" class="form-input" style="flex:1; min-width: 120px; padding: 10px; border-radius: 8px; background-color: #2a2a2a; color: #eee; border: none;">
+    
+    <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}" class="form-input" style="flex:1; min-width: 120px; padding: 10px; border-radius: 8px; background-color: #2a2a2a; color: #eee; border: none;">
+    
+    <button type="submit" class="form-button" style="padding: 10px 20px; background-color: #333; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s;">
+      Filter
+    </button>
+  </form>
+  
+  <div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <img
+        src="{{ product.image.url }}"
+        alt="Product 1"
+      />
+      <h4> {{ product.name }} </h4>
+      <p>${{ product.price }}</p>
+      <a href="product-page-{{product.slug}}"><button type="submit" class="form-button" style="margin: 20px 0 ; padding: 10px 20px; background-color: #333; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s;">View Product</button></a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

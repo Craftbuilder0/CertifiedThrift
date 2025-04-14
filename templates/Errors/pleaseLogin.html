@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Required</title>
+    <style>
+        /* Import Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #121212;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .login-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #ff4b2b;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            background: #ff3a1b;
+            transform: scale(1.05);
+        }
+
+        .login-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔒 Access Restricted</h1>
+        <p>You need to log in to view this page.</p>
+        <a href="/login" class="login-btn">Login Now</a>
+    </div>
+
+</body>
+</html>

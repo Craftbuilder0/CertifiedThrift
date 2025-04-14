@@ -1,0 +1,183 @@
+{% extends "base.html" %} {% block title %}{{product.name}}{% endblock title %}
+{% block content %}
+<style>
+  .product-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px;
+  }
+
+  .product-image {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .product-image img {
+    max-width: 80%;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .product-details {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .product-details h2 {
+    font-size: 28px;
+    margin: 0;
+  }
+
+  .product-details .price {
+    font-size: 22px;
+    color: #ccc;
+  }
+
+  .product-details p {
+    color: #bbb;
+    line-height: 1.6;
+  }
+
+  .product-details .btn {
+    background-color: #333;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+  }
+  .related-section {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 20px;
+    animation: fadeInUp 1.2s ease;
+  }
+
+  .related-section h3 {
+    margin-bottom: 20px;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 1.2s ease;
+  }
+
+  .related-card:hover {
+    transform: scale(1.03);
+  }
+
+  .related-card img {
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .related-card .info {
+    padding: 10px;
+  }
+
+  .related-card h4 {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+
+  .related-card p {
+    color: #bbb;
+    font-size: 14px;
+  }
+  footer {
+    background-color: #1a1a1a;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+    margin-top: 60px;
+  }
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes imagePop {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+</style>
+<div class="product-container">
+  <div class="product-image">
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+  </div>
+  <div class="product-details">
+    <h2>{{ product.name }}</h2>
+    <div class="price">${{ product.price }}</div>
+    <p>{{ product.description }}</p>
+    <form method="POST" action="{% url 'add_to_cart' product.slug %}">
+      {% csrf_token %}
+      <a href="add-to-cart-{{product.slug}}"><button type="submit" class="btn">Add to Cart</button></a>
+    </form>
+  </div>
+</div>
+<div class="related-section">
+    <h3>Related Products</h3>
+    <div class="related-grid">
+      {% for item in related_products %}
+      <div class="related-card">
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" />
+        <div class="info">
+          <h4>{{ item.name }}</h4>
+          <p>${{ item.price }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock content %}

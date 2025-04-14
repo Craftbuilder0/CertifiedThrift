@@ -1,0 +1,228 @@
+{% extends "base.html" %} {% block title %}Home{% endblock title %} {% block content %}
+<style>
+  .slideshow {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    overflow: hidden;
+  }
+
+  .slides {
+    display: flex;
+    transition: transform 0.8s ease-in-out;
+    height: 100%;
+  }
+
+  .slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100%;
+    height: 100%;
+  }
+
+  .slide img {
+    height: 100%;
+    object-fit: fill;
+    object-position: center;
+  }
+
+  .dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    background: #999;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .dot.active {
+    background: #fff;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    33% {
+      transform: translateX(-100%);
+    }
+    66% {
+      transform: translateX(-200%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .categories {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 1000px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .categories a {
+    background-color: #2a2a2a;
+    color: #eee;
+    padding: 15px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .categories a:hover {
+    background-color: #444;
+  }
+
+  section {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  h2 {
+    border-left: 5px solid #888;
+    padding-left: 10px;
+    margin-bottom: 20px;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .product-card {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    padding: 15px;
+  }
+
+  .product-card img {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .product-card h4 {
+    margin: 10px 0 5px;
+    font-size: 16px;
+  }
+
+  .product-card p {
+    color: #bbb;
+    font-size: 14px;
+  }
+
+  footer {
+    background-color: #1a1a1a;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+    margin-top: 60px;
+  }
+</style>
+<div class="slideshow">
+  <div class="slides" id="slideContainer">
+    {% for slide in slides %}
+    <div class="slide">
+      <img
+        src="{{ slide.image.url }}"
+        alt="Slide"
+      />
+    </div>
+    {% endfor %}
+  </div>
+  <div class="dots" id="dotsContainer"></div>
+</div>
+
+<div class="categories">
+  <a href="#">Tops</a>
+  <a href="#">Bottom Wear</a>
+  <a href="#">Foot Wear</a>
+  <a href="#">Accessories</a>
+  <a href="#">Layering</a>
+</div>
+
+<section>
+  <h2>Featured Products</h2>
+  <div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <img src="{{ product.image.url }}" alt="Product 1" />
+      <h4>{{ product.name }}</h4>
+      <p>${{ product.price }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section>
+  <h2>New Arrivals</h2>
+  <div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <img
+        src="{{ product.image.url }}"
+        alt="New 1"
+      />
+      <h4>{{ product.name }}</h4>
+      <p>${{ product.price }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  const slides = document.querySelectorAll(".slide");
+  const slideContainer = document.getElementById("slideContainer");
+  const dotsContainer = document.getElementById("dotsContainer");
+
+  let currentSlide = 0;
+  const totalSlides = slides.length;
+
+  // Create dots
+  slides.forEach((_, index) => {
+    const dot = document.createElement("div");
+    dot.classList.add("dot");
+    if (index === 0) dot.classList.add("active");
+    dot.addEventListener("click", () => goToSlide(index));
+    dotsContainer.appendChild(dot);
+  });
+
+  const updateSlider = () => {
+    slideContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+    document.querySelectorAll(".dot").forEach((dot, idx) => {
+      dot.classList.toggle("active", idx === currentSlide);
+    });
+  };
+
+  const goToSlide = (index) => {
+    currentSlide = index;
+    updateSlider();
+  };
+
+  const nextSlide = () => {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    updateSlider();
+  };
+
+  // Auto slide
+  setInterval(nextSlide, 5000);
+</script>
+{% endblock content %}

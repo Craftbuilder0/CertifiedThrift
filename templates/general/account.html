@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock title %}
+{% block content %}
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "Montserrat", sans-serif;
+    background-color: #0f0f0f;
+    color: #e0e0e0;
+    line-height: 1.6;
+    height: 100vh;
+    gap: 20px;
+  }
+
+  .account-wrapper {
+    display: flex;
+    max-width: 1200px;
+    margin: 60px auto;
+    border-radius: 20px;
+    background: #1a1a1a;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 1s ease;
+  }
+
+  .sidebar {
+    width: 280px;
+    height: 80%;
+    background: #141414;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  .sidebar button {
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 16px;
+    color: #aaa;
+    cursor: pointer;
+    padding: 12px 15px;
+    border-radius: 10px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .sidebar button:hover,
+  .sidebar button.active {
+    background-color: #262626;
+    color: #fff;
+  }
+
+  .content {
+    flex: 1;
+    padding: 40px;
+    width: 500px;
+    overflow-y: auto;
+  }
+
+  .section {
+    display: none;
+    animation: fadeSlide 0.5s ease;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  #logout.section.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  form label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, #0ff, #09f);
+    color: #000;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .order,
+  .address {
+    padding: 20px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeSlide {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .account-wrapper {
+      flex-direction: column;
+    }
+    .sidebar {
+      width: 100%;
+      flex-direction: row;
+      overflow-x: auto;
+    }
+    .sidebar button {
+      flex: 1;
+      white-space: nowrap;
+    }
+    .content{
+      width: auto;
+    }
+  }
+</style>
+
+<div class="account-wrapper">
+  <div class="sidebar">
+    <h2>Account</h2>
+    <button class="tab-btn active" data-tab="profile">👤 Profile</button>
+    <button class="tab-btn" data-tab="orders">📦 Orders</button>
+    <button class="tab-btn" data-tab="addresses">🏠 Addresses</button>
+    <button class="tab-btn" data-tab="security">🔐 Security</button>
+    <button class="tab-btn"data-tab="logout">🚪 Logout</button>
+  </div>
+
+  <div class="content">
+    <div id="profile" class="section active">
+      <h3>Profile Information</h3>
+      <form method='POST'>
+        {% csrf_token %}
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" value="{{ user.username }}" />
+
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="{{ user.email }}"
+        />
+
+        <button type="submit" class="btn">Save Changes</button>
+      </form>
+    </div>
+
+    <div id="orders" class="section">
+      <h3>Order History</h3>
+      {% for order in orders %}
+      <div class="order">
+        <strong>Order #{{ order.id }}</strong><br />
+        Date: {{ order.date_ordered }}<br />
+        Total: ${{ order.get_cart_total }}<br />
+        Status: {{ order.status }}
+      </div>
+      {% empty %}
+      <p>No orders yet.</p>
+      {% endfor %}
+    </div>
+
+    <div id="addresses" class="section" style="overflow-y: scroll">
+      <h3>Shipping Addresses</h3>
+      {% for address in addresses %}
+      <div class="address">
+        {{ address.customer.user.username }}<br />
+        {{ address.state }}, {{ address.city }}, {{ address.zipcode }}<br />
+        {{ address.order.id}}
+        <form method="POST" action="">
+          {% csrf_token %}
+          <input type="hidden" name="delete_address_id" value="{{ address.id }}">
+          <button class="btn" style="margin-top: 10px">Delete</button>
+        </form>
+      </div>
+      {% empty %}
+      <p>No saved addresses.</p>
+      {% endfor %} 
+    </div>
+
+    <div id="security" class="section">
+      <h3>Password & Security</h3>
+      <form method="POST" action="">
+        {% csrf_token %} {{ password_form.as_p }}
+        <button type="submit" class="btn">Update Password</button>
+      </form>
+    </div>
+
+    <div id="logout" class="section"  >
+      <a href="/logout" class="btn" style="padding: 20px; color: white; text-decoration: none;">Logout</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const sections = document.querySelectorAll(".section");
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      tabButtons.forEach((b) => b.classList.remove("active"));
+      sections.forEach((s) => s.classList.remove("active"));
+
+      btn.classList.add("active");
+      const tab = btn.dataset.tab;
+      if (tab) document.getElementById(tab).classList.add("active");
+    });
+  });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock title %}
+{% block content %}
+<style>
+    .container {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 20px;
+      animation: fadeIn 1s ease;
+    }
+    h1 {
+      font-size: 42px;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+    .highlight {
+      background: linear-gradient(to right, #0ff, #09f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      margin-bottom: 20px;
+      color: #cccccc;
+    }
+    .mission {
+      margin-top: 40px;
+      padding: 30px;
+      background: #1a1a1a;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+    }
+    .team-section {
+      margin-top: 60px;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .member {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .member:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px rgba(0, 255, 255, 0.2);
+    }
+    .member img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+    .member h4 {
+      margin-bottom: 5px;
+      color: #fff;
+    }
+    .member span {
+      font-size: 14px;
+      color: #aaa;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+<div class="container">
+    <h1><span class="highlight">About</span> Blackout</h1>
+    <p>Welcome to Blackout — your one-stop destination for premium fashion. We are passionate about making style accessible and helping people express themselves through unique, high-quality clothing and accessories.</p>
+
+    <div class="mission">
+      <h2>Our Mission</h2>
+      <p>To revolutionize online fashion shopping by offering cutting-edge styles, fast delivery, and outstanding customer service. We aim to empower individuals to embrace their identity through clothing that speaks volumes.</p>
+    </div>
+
+    <div class="team-section">
+      {% comment %} <h2>Meet the Team</h2>
+      {% comment %} <div class="team-grid">
+        <div class="member">
+          <img src="https://via.placeholder.com/80" alt="Founder">
+          <h4>Talha Jubair</h4>
+          <span>Founder & Designer</span>
+        </div>
+        <div class="member">
+          <img src="https://via.placeholder.com/80" alt="Tech Lead">
+          <h4>Ayaan M.</h4>
+          <span>Lead Developer</span>
+        </div>
+        <div class="member">
+          <img src="https://via.placeholder.com/80" alt="Marketing">
+          <h4>Samira K.</h4>
+          <span>Marketing Head</span>
+        </div>
+        <div class="member">
+          <img src="https://via.placeholder.com/80" alt="Customer Support">
+          <h4>Rafi Q.</h4>
+          <span>Customer Relations</span>
+        </div>
+      </div> {% endcomment %}
+    </div>
+  </div>
+{% endblock content %}

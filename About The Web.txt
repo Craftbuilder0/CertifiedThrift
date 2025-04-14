@@ -1,0 +1,38 @@
+--Tech Slack--
+  Frontend  : HTML, CSS, JavaScript (with fetch/AJAX for API interaction)  
+  Backend  : Django (Python)  
+  Database  : SQLite (or PostgreSQL, if used in production)  
+  APIs  : Stripe (or your payment gateway)  
+  Authentication  : Django's built-in auth system  
+  Deployment  : [Render]
+
+
+Users interacting with:
+
+Store (browse products, add to cart)
+
+Checkout (enter shipping, pay)
+
+Data flowing to:
+
+Order system (orders, order items)
+
+Payment system (via frontend API)
+
+Database (stores users, orders, products, etc.)
+
+
+
+Entities: Customer, Product, Order, OrderItem, ShippingAddress, Category
+
+Relationships:
+
+One Customer can have many Orders
+
+One Order can have many OrderItems
+
+Each OrderItem references one Product
+
+Each Product belongs to one Category
+
+Each Order can have one ShippingAddress
