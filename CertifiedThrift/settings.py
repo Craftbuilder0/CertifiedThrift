@@ -141,8 +141,8 @@ STATIC_URL = '/static/'  # URL to access static files
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Global static directory
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Collected static files (for production)
 
-# MEDIA_URL = '/media/'  # URL to access media files
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Path where media files are stored
+MEDIA_URL = '/media/'  # URL to access media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Path where media files are stored
 
 LOGIN_URL = '/pleaseLogin'  # Or any other path to your login view
 
