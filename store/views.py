@@ -113,12 +113,16 @@ def update_cart(request, slug):  # This is for updating the quantity of each pro
 
 
 @login_required
-def remove_from_cart(request, slug):  # Remove product from the cart
-    # If submitted
+def remove_from_cart(request, slug):
     if request.method == "POST":
+        # Get the first matching OrderItem for this user and product
+        order_item = OrderItem.objects.filter(
+            product__slug=slug,
+            user=request.user,
+            ordered=False
+        ).first()
 
-        # Access the OrderItem model using the product slug
-        item = get_object_or_404(OrderItem, product__slug=slug)
-        item.delete()
+        if order_item:
+            order_item.delete()
 
-    return redirect('cart') 
+    return redirect('cart')
