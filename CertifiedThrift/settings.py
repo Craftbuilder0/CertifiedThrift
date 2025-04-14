@@ -126,11 +126,11 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dkvre1r5l',
-    'API_KEY': '653722963449271',
-    'API_SECRET': 'wa5IKKxkPoFbPpVTnPWOj547V88',
-}
+cloudinary.config(
+    cloud_name = 'dkvre1r5l',
+    api_key = '653722963449271',
+    api_secret = 'wa5IKKxkPoFbPpVTnPWOj547V88'
+)
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
