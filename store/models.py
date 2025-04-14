@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
@@ -19,7 +20,7 @@ class products(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
     category = models.ForeignKey(category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products/')
+    image = CloudinaryField('image') #models.ImageField(upload_to='products/')
     created_at = models.DateTimeField(default=datetime.today())
     available = models.BooleanField(default=True)
     slug = models.SlugField(unique=True, blank=True)
