@@ -50,11 +50,26 @@ def store_view(request):
 def product_view(request, slug):
     # Getting the specific product using the passed-in slug
     product = products.objects.get(slug=slug)
+    reviews = product.reviews.all()
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect('product', slug=slug)
+    else:
+        form = ReviewForm()
+
     # Returning the values to the template
     context = {
         'product': product, 
         'category': category.objects.all(), 
-        'related_products': products.objects.all()
+        'related_products': products.objects.all(),
+        'reviews': reviews,
+        'review_form': form,
     }
     return render(request, 'store/products.html', context)
 

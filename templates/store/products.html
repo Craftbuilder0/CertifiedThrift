@@ -112,13 +112,95 @@
     color: #bbb;
     font-size: 14px;
   }
-  footer {
-    background-color: #1a1a1a;
-    color: #aaa;
-    text-align: center;
-    padding: 20px;
-    margin-top: 60px;
+  .review {
+    background-color: #1e1e2f38;
+    color: #e0e0e0;
+    padding: 2rem;
+    border-radius: 12px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    max-width: 700px;
+    margin: 2rem auto;
+    margin-top: 100px;
   }
+
+  .review h3 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .review div {
+    background-color: #2a2a3d;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #4caf50;
+  }
+
+  .review strong {
+    color: #4caf50;
+    font-weight: 600;
+  }
+
+  .review p {
+    margin: 0.5rem 0;
+    color: #d0d0d0;
+  }
+
+  .review small {
+    font-size: 0.85rem;
+    color: #888;
+  }
+
+  .review h4 {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: #ffffff;
+  }
+
+  .review form {
+    margin-top: 1rem;
+  }
+
+  .review form input,
+  .review form textarea,
+  .review form select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background-color: #2e2e40;
+    border: 1px solid #555;
+    color: #fff;
+    border-radius: 6px;
+  }
+
+  .review form button {
+    background-color: #4caf50;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .review form button:hover {
+    background-color: #43a047;
+  }
+
+  .review a {
+    color: #4caf50;
+    text-decoration: none;
+  }
+
+  .review a:hover {
+    text-decoration: underline;
+  }
+
   /* Animations */
   @keyframes fadeIn {
     from {
@@ -157,28 +239,50 @@
   </div>
   <div class="product-details">
     <h2>{{ product.name }}</h2>
-    <p>{{ product.image.url }}</p>
     <div class="price">${{ product.price }}</div>
     <p>{{ product.description }}</p>
     <form method="POST" action="{% url 'add_to_cart' product.slug %}">
       {% csrf_token %}
-      <a href="add-to-cart-{{product.slug}}"><button type="submit" class="btn">Add to Cart</button></a>
+      <a href="add-to-cart-{{product.slug}}"
+        ><button type="submit" class="btn">Add to Cart</button></a
+      >
     </form>
   </div>
 </div>
-<div class="related-section">
-    <h3>Related Products</h3>
-    <div class="related-grid">
-      {% for item in related_products %}
-      <div class="related-card">
-        <img src="{{ item.image.url }}" alt="{{ item.name }}" />
-        <div class="info">
-          <h4>{{ item.name }}</h4>
-          <p>${{ item.price }}</p>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+<div class="review">
+  <h3>Reviews</h3>
+  {% for review in reviews %}
+  <div>
+    <strong>{{ review.user.username }}</strong> - {{ review.rating }}⭐
+    <p>{{ review.comment }}</p>
+    <small>{{ review.created_at }}</small>
   </div>
+  {% empty %}
+  <p>No reviews yet.</p>
+  {% endfor %} {% if user.is_authenticated %}
+  <h4>Leave a review</h4>
+  <form method="POST">
+    {% csrf_token %} 
+    {{ review_form.as_p }}
+    <button type="submit">Submit Review</button>
+  </form>
+  {% else %}
+  <p><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
+  {% endif %}
+</div>
+<div class="related-section">
+  <h3>Related Products</h3>
+  <div class="related-grid">
+    {% for item in related_products %}
+    <div class="related-card">
+      <img src="{{ item.image.url }}" alt="{{ item.name }}" />
+      <div class="info">
+        <h4>{{ item.name }}</h4>
+        <p>${{ item.price }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
 {% endblock content %}

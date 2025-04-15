@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils.text import slugify
@@ -35,7 +36,6 @@ class products(models.Model):
         return self.name
 	        
     
-
 # Customer model - Same as user model but more formal way of handling user in ecommerce website
 class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -108,3 +108,21 @@ class ShippingAddress(models.Model):
 
 	def __str__(self):
 		return self.address
+     
+
+class Review(models.Model):
+    product = models.ForeignKey(products, related_name="reviews", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])  # 1 to 5 stars
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name} - {self.rating}⭐"
+
+
+# Creating a form(best practice is to make a forms.py file)
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'comment']
