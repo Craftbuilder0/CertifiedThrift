@@ -22,31 +22,6 @@
         background-color: #121212;
         color: #eee;
       }
-
-      header {
-        background-color: #1f1f1f;
-        padding: 40px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      header h1 {
-        color: #fff;
-        letter-spacing: 3px;
-        font-size: 28px;
-      }
-
-      nav a {
-        color: #aaa;
-        margin-left: 20px;
-        text-decoration: none;
-        transition: color 0.3s;
-      }
-
-      nav a:hover {
-        color: #fff;
-      }
       footer{
         display: flex;
         justify-content: center;
@@ -54,177 +29,161 @@
       }
     </style>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
-      body {
-        font-family: "Montserrat", sans-serif;
-        background-color: black;
-        color: white;
-      }
-      /* Menu toggle button (hamburger) */
-      .menu-toggle {
-        cursor: pointer;
-        display: none;
-        margin-right: 20px;
-      }
-
-      .hamburger-icon {
+      /* Navbar styles */
+      .navbar {
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 30px;
-        height: 25px;
-      }
-
-      .hamburger-icon .bar {
-        height: 4px;
-        background-color: white;
-        border-radius: 5px;
-        transition: all 0.3s ease; /* Smooth transition */
-      }
-
-      /* Active state styles (transform into X) */
-      .menu-toggle.active .bar:nth-child(1) {
-        transform: rotate(45deg) translateX(50%);
-        top: 0;
-        left: 0;
-      }
-
-      .menu-toggle.active .bar:nth-child(2) {
-        opacity: 0; /* Middle bar disappears */
-      }
-
-      .menu-toggle.active .bar:nth-child(3) {
-        transform: rotate(-45deg) translateX(50%);
-        top: 0;
-        left: 0;
-      }
-
-      nav {
-        display: flex;
-        flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 0px;
+        padding: 20px 40px;
+        background-color: #1e1e1e;
         position: relative;
-        background-color: #1f1f1f;
-        padding: 40px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        z-index: 10;
       }
-      nav .logo {
+
+      /* Left side (logo and title) */
+      .logo-container {
         display: flex;
         align-items: center;
-        margin-left: 24px;
       }
-      nav .logo img {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
+
+      .logo-container img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
       }
-      nav .logo h1 {
-        margin-left: 10%;
+
+      .logo-container .site-name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
       }
-      nav .nav ul {
+
+      /* Right side (navigation links) */
+      .nav-links {
         list-style: none;
         display: flex;
         gap: 20px;
-        align-items: center;
-        list-style: none;
-        margin-right: 10px;
       }
-      nav .nav ul li a {
+
+      .nav-links li {
+        margin: 0;
+      }
+
+      .nav-links a {
         text-decoration: none;
-        color: white;
+        color: #fff;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: #f39c12;
+      }
+
+      /* Hamburger menu (for mobile) */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        z-index: 20;
+      }
+
+      .hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger.open span:nth-child(1) {
+        transform: rotate(45deg);
         position: relative;
-        padding-bottom: 8px;
+        top: 8px;
       }
-      nav .nav ul li a::before {
-        content: "";
-        position: absolute;
-        width: 0;
-        height: 2px;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: white;
-        margin: 5px 0;
-        transition: all 0.5s;
+
+      .hamburger.open span:nth-child(2) {
+        opacity: 0;
       }
-      nav .nav ul li a:hover::before {
-        width: 100%;
+
+      .hamburger.open span:nth-child(3) {
+        transform: rotate(-45deg);
+        position: relative;
+        bottom: 8px;
       }
+
+      /* Sliding navbar for mobile */
+      /* Right side (navigation links) */
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+
+      /* Default styles for nav links (desktop) */
+      .nav-links {
+        position: static;
+        flex-direction: row;
+        transform: none;
+        background-color: transparent;
+        height: auto;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      /* Media query for mobile devices */
       @media (max-width: 768px) {
-        .menu-toggle {
-          display: block;
-        }
-        .nav {
+        .nav-links {
           position: absolute;
-          top: 100%;
+          top: 0;
           left: 0;
           width: 100%;
-          background-color: black;
-          padding: 10px 0;
+          height: 50vh;
+          background-color: #1e1e1e;
+          flex-direction: column;
+          justify-content: space-evenly;
           align-items: center;
-          justify-content: center;
-          text-align: center;
-          gap: 25px;
-          overflow: hidden;
-          max-height: 0;
-          transition: max-height 0.4s ease-in-out;
-          flex-direction: column;
+          transform: translateY(-100%);
+          transition: transform 0.3s ease-in-out;
         }
-        nav .nav ul{
-           gap: 40px;
-        }
-        .nav.active {
-          max-height: 500px; /* Adjust based on your content height */
-          background: #393939;
-        }
-        nav .logo {
-          margin-left: 10px;
-        }
-        nav .logo img {
-          width: 60px;
-          height: 60px;
-        }
-        nav .logo h1 {
-          font-size: 1.2rem;
-        }
-        nav .nav ul {
-          flex-direction: column;
-          margin: 10px 0;
-        }
-        .nav.active ul li {
-          opacity: 1;
+
+        .nav-links.active {
           transform: translateY(0);
+        }
+
+        .hamburger {
+          display: flex;
         }
       }
     </style>
+
   </head>
   <body>
-
-    <nav>
-      <div class="logo">
-        <h1>CertifiedThrift</h1>
-      </div>
-      <div class="menu-toggle" id="menu-toggle">
-        <div class="hamburger-icon">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
+    <header>
+      <nav class="navbar">
+        <!-- Left side: Logo and Website Name -->
+        <div class="logo-container">
+          <a href="#" class="site-name">CertifiedThrift</a>
         </div>
-      </div>
-      <div class="nav" id="nav-menu">
-        <ul>
+
+        <!-- Right side: Navigation Links -->
+        <ul class="nav-links">
           <li><a href="/">Home</a></li>
           <li><a href="/store/">Shop</a></li>
           <li><a href="/about">About</a></li>
           <li><a href="/store/cart">Cart</a></li>
           <li><a href="/account">Account</a></li>
         </ul>
-      </div>
-    </nav>
+
+        <!-- Hamburger Menu (for mobile) -->
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </header>
     {% if messages %} {% for message in messages %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
       <strong>{{ message.tags }}!</strong> {{ message }}
@@ -241,15 +200,13 @@
       <p>© 2025 CertifiedThrift. All rights reserved.</p>
     </footer>
     <script>
-      const menu_toggle = document.getElementById("menu-toggle");
-      const nav = document.getElementById("nav-menu");
-      const icon = menu_toggle.querySelector(".hamburger-icon");
+      // Toggle the navigation menu when the hamburger is clicked
+      const hamburger = document.getElementById("hamburger");
+      const navLinks = document.querySelector(".nav-links");
 
-      menu_toggle.addEventListener("click", () => {
-        nav.classList.toggle("active"); // Toggle between active and inactive classes
-
-        // Toggle the hamburger icon between active and inactive
-        menu_toggle.classList.toggle("active");
+      hamburger.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+        hamburger.classList.toggle("open");
       });
     </script>
   </body>
