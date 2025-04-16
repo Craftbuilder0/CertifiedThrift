@@ -172,7 +172,12 @@
           <li><a href="/store/">Shop</a></li>
           <li><a href="/about">About</a></li>
           <li><a href="/store/cart">Cart</a></li>
-          <li><a href="/account">Account</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="/account">Account</a></li>     
+          {% else %}
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Sign-Up</a></li>
+          {% endif %}
         </ul>
 
         <!-- Hamburger Menu (for mobile) -->
